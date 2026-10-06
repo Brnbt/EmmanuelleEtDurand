@@ -5,6 +5,21 @@
 const RSVP_URL = "";
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Menu téléphone
+  const nav = document.querySelector("nav");
+  const menuBtn = nav && nav.querySelector(".menu-btn");
+  if (menuBtn) {
+    const basculer = (ouvrir) => {
+      nav.classList.toggle("ouvert", ouvrir);
+      menuBtn.setAttribute("aria-expanded", ouvrir);
+      menuBtn.setAttribute("aria-label", ouvrir ? "Fermer le menu" : "Ouvrir le menu");
+    };
+    menuBtn.addEventListener("click", () => basculer(!nav.classList.contains("ouvert")));
+    nav.querySelectorAll("ul a").forEach((a) => a.addEventListener("click", () => basculer(false)));
+    document.addEventListener("click", (e) => { if (!nav.contains(e.target)) basculer(false); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") basculer(false); });
+  }
+
   initRsvp();
 
   initCarrousel();

@@ -6,7 +6,7 @@
 <title>Emmanuelle &amp; Durand — 26 juin 2027</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Jost:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;1,400&family=EB+Garamond:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <script src="js/script.js" defer></script>
 </head>
@@ -14,7 +14,7 @@
 
 <nav>
   <div class="inner">
-    <span class="names">E &amp; D</span>
+    <span class="names">E <span class="esperluette">&amp;</span> D</span>
     <ul>
       <li><a href="#histoire">Notre histoire</a></li>
       <li><a href="#programme">Programme</a></li>
@@ -30,11 +30,9 @@
 
 <section class="hero" id="accueil">
   <div class="hero-bg" aria-hidden="true">
-    <img src="images/accueil/couchant-1.jpg" alt="">
     <img src="images/accueil/couchant-2.jpg" alt="">
-    <img src="images/accueil/couchant-3.jpg" alt="">
   </div>
-  <h1>Emmanuelle<br>&amp; Durand</h1>
+  <h1>Emmanuelle<br><span class="esperluette">&amp;</span> Durand</h1>
   <p class="place">Yaoundé, Cameroun</p>
   <div class="lede">
     <p>Sous les couleurs tendres du couchant, nous vous convions à partager un instant suspendu, entre ciel, amour et promesse d’infini.</p>
@@ -51,15 +49,16 @@
   </div>
 
   <div class="carrousel" aria-roledescription="carrousel" aria-label="Photos de notre histoire">
-    <button class="car-btn prev" type="button" aria-label="Photo précédente">‹</button>
-    <div class="car-track" tabindex="0">
+    <button class="car-btn prev" type="button" aria-label="Photo précédente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div class="car-stage">
       <figure><img src="images/histoire/01-mai-2022.jpg" alt="Emmanuelle et Durand, selfie ensoleillé en 2022" loading="lazy"></figure>
       <figure><img src="images/histoire/02-mai-2023.jpg" alt="Emmanuelle et Durand en soirée, 2023" loading="lazy"></figure>
       <figure><img src="images/histoire/03-juin-2023.jpg" alt="Emmanuelle et Durand dans un restaurant, 2023" loading="lazy"></figure>
       <figure><img src="images/histoire/04-bateau.jpg" alt="Emmanuelle et Durand sur un bateau" loading="lazy"></figure>
       <figure><img src="images/histoire/05-juillet-2026.jpg" alt="Emmanuelle et Durand en tenue rose, 2026" loading="lazy"></figure>
     </div>
-    <button class="car-btn next" type="button" aria-label="Photo suivante">›</button>
+    <button class="car-btn next" type="button" aria-label="Photo suivante"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+    <div class="car-dots"></div>
   </div>
 
   <div class="wrap">
@@ -72,6 +71,7 @@
         <p>Le <strong>21 novembre 2024</strong>, la naissance de notre fille a donné une nouvelle couleur à notre famille. De deux, nous sommes devenus quatre. Elle nous rappelle chaque jour que l'amour se vit aussi dans les choses simples : une présence, un repas partagé, une prière, une main tendue.</p>
         <p>Le <strong>9 mai 2026</strong>, nous nous sommes dit oui civilement en France, où nous vivons aujourd'hui. Mais notre histoire porte aussi les couleurs du Cameroun, où sont nos racines. Alors à l'été 2027, nous y retournerons pour célébrer notre union en deux temps : d'abord le mariage traditionnel et la dot, puis devant Dieu lors du mariage religieux, suivi du vin d'honneur et de la soirée.</p>
         <p>Ce ne sera pas une nouvelle histoire. Ce sera la même histoire, simplement plus grande — une histoire commencée sur Snapchat, poursuivie autour d'un plat de sangha, devenue une famille, et portée depuis par une conviction simple : l'amour se choisit, se construit et se cultive, avec Dieu au centre.</p>
+        <p>Et pour la suite, nous avons encore beaucoup à vivre, à construire, à transmettre… Et surtout, beaucoup de raisons de continuer à nous choisir, chaque jour.</p>
       </div>
     </details>
   </div>
@@ -86,7 +86,7 @@
       <div class="tl-item"><div class="tl-time">10h00</div><div><h3>Mariage religieux</h3><p>Chapelle du Lac, Yaoundé</p></div></div>
       <div class="tl-item"><div class="tl-time">Après</div><div><h3>Vin d'honneur</h3><p>Jardins de la Chapelle</p></div></div>
       <div class="tl-item"><div class="tl-time">18h30</div><div><h3>Apéro</h3><p>Arc Bi Valley, quartier Golf, Yaoundé</p></div></div>
-      <div class="tl-item"><div class="tl-time">20h00</div><div><h3>Dîner &amp; soirée dansante</h3><p>Arc Bi Valley, jusqu'au matin</p></div></div>
+      <div class="tl-item"><div class="tl-time">20h00</div><div><h3>Dîner <span class="esperluette">&amp;</span> soirée dansante</h3><p>Arc Bi Valley, jusqu'au matin</p></div></div>
     </div>
   </div>
 </section>
@@ -97,11 +97,14 @@
     <h2>Un avant-goût du ciel</h2>
     <p>Pour célébrer notre union, nous nous inspirons des couleurs magiques d'un coucher de soleil vibrant : du bleu céleste aux nuances ardentes de jaune, de pêche, de corail et de fuchsia. Choisissez la teinte qui vous inspire pour illuminer cette journée à nos côtés !</p>
     <div class="swatches">
-      <div class="swatch" style="background:var(--sky)"></div>
-      <div class="swatch" style="background:var(--gold)"></div>
-      <div class="swatch" style="background:var(--peach)"></div>
-      <div class="swatch" style="background:var(--coral)"></div>
-      <div class="swatch" style="background:var(--fuchsia)"></div>
+      <div class="swatch" style="background:#98D7E4" title="#98D7E4"></div>
+      <div class="swatch" style="background:#EFD66D" title="#EFD66D"></div>
+      <div class="swatch" style="background:#FAC2BC" title="#FAC2BC"></div>
+      <div class="swatch" style="background:#FFB285" title="#FFB285"></div>
+      <div class="swatch" style="background:#FF6B35" title="#FF6B35"></div>
+      <div class="swatch" style="background:#EE7863" title="#EE7863"></div>
+      <div class="swatch" style="background:#F58893" title="#F58893"></div>
+      <div class="swatch" style="background:#D81159" title="#D81159"></div>
     </div>
     <p>L'idée n'est pas d'être tous habillés pareil, mais de créer ensemble une belle harmonie visuelle : douce, romantique et chaleureuse.</p>
     <p class="avoid">À éviter si possible : le blanc total, réservé à la mariée, ainsi que les couleurs très froides ou fluorescentes.</p>
@@ -114,10 +117,10 @@
     <h2>Confirmez votre présence</h2>
     <p>Afin de nous aider à organiser cette journée au mieux, merci de nous dire si vous serez des nôtres à la cérémonie religieuse et à la soirée.</p>
     <div class="form-wrap">
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfJYbdGvlvYZwzPAirw4K4OOrM4UR2MwmTHBPWyHF8x-kFjBg/viewform?embedded=true" width="640" height="1601" frameborder="0" marginheight="0" marginwidth="0">Chargement…</iframe>
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeXE0THJPan2_YO47gVYJxP8VFkxpYu0eYt6xsypB8EThHefQ/viewform?embedded=true" width="640" height="1436" frameborder="0" marginheight="0" marginwidth="0">Chargement…</iframe>
     </div>
     <p class="deadline">Merci de répondre avant le 31 janvier 2027</p>
-    <p style="font-size:.85rem; opacity:.7;">Le formulaire ne s'affiche pas ? <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSfJYbdGvlvYZwzPAirw4K4OOrM4UR2MwmTHBPWyHF8x-kFjBg/viewform" target="_blank" rel="noopener">Ouvrez-le directement ici</a>.</p>
+    <p style="font-size:.85rem; opacity:.7;">Le formulaire ne s'affiche pas ? <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSeXE0THJPan2_YO47gVYJxP8VFkxpYu0eYt6xsypB8EThHefQ/viewform" target="_blank" rel="noopener">Ouvrez-le directement ici</a>.</p>
   </div>
 </section>
 
@@ -209,7 +212,7 @@
   </div>
 </section>
 
-<footer>Avec amour, Emmanuelle &amp; Durand — 26 juin 2027</footer>
+<footer>Avec amour, Emmanuelle <span class="esperluette">&amp;</span> Durand — 26 juin 2027</footer>
 
 </body>
 </html>

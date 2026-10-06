@@ -7,36 +7,7 @@ const RSVP_URL = "";
 document.addEventListener("DOMContentLoaded", () => {
   initRsvp();
 
-  // Carrousel « Notre histoire » : flèches + défilement automatique
-  const car = document.querySelector(".carrousel");
-  if (!car) return;
-  const track = car.querySelector(".car-track");
-  const slides = [...track.children];
-  const reduit = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  const indexActuel = () => {
-    const centre = track.scrollLeft + track.clientWidth / 2;
-    let best = 0, dist = Infinity;
-    slides.forEach((s, i) => {
-      const d = Math.abs(s.offsetLeft + s.offsetWidth / 2 - centre);
-      if (d < dist) { dist = d; best = i; }
-    });
-    return best;
-  };
-  const aller = (i) => {
-    const s = slides[(i + slides.length) % slides.length];
-    track.scrollTo({ left: s.offsetLeft - (track.clientWidth - s.offsetWidth) / 2 });
-  };
-
-  car.querySelector(".prev").addEventListener("click", () => aller(indexActuel() - 1));
-  car.querySelector(".next").addEventListener("click", () => aller(indexActuel() + 1));
-
-  if (reduit) return;
-  let pause = false, visible = false;
-  ["mouseenter", "focusin", "pointerdown"].forEach(e => car.addEventListener(e, () => pause = true));
-  ["mouseleave", "focusout"].forEach(e => car.addEventListener(e, () => pause = false));
-  new IntersectionObserver(([e]) => visible = e.isIntersecting, { threshold: 0.4 }).observe(car);
-  setInterval(() => { if (!pause && visible) aller(indexActuel() + 1); }, 4500);
+  initCarrousel();
 });
 
 // ---------- RSVP ----------
@@ -177,4 +148,126 @@ function initRsvp() {
       bouton.disabled = false; bouton.textContent = "Envoyer ma réponse";
     }
   });
+}
+
+// ---------- Carrousel « Notre histoire » ----------
+function initCarrousel() {
+  const car = document.querySelector(".carrousel");
+  if (!car) return;
+  const stage = car.querySelector(".car-stage");
+  const slides = [...stage.querySelectorAll("figure")];
+  const dotsBox = car.querySelector(".car-dots");
+  const n = slides.length;
+  const DUREE = 5000; // temps d'affichage de chaque photo (ms)
+  const reduit = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let actuel = 0, timer = null, survol = false, visible = false, zoomOuvert = false;
+  car.style.setProperty("--duree", DUREE + "ms");
+  car.tabIndex = 0;
+
+  // Les images sont proches : on les charge toutes d'emblée
+  slides.forEach((f) => f.querySelector("img").loading = "eager");
+
+  // Points de navigation
+  const dots = slides.map((_, i) => {
+    const d = document.createElement("button");
+    d.type = "button"; d.setAttribute("aria-label", `Photo ${i + 1} sur ${n}`);
+    d.addEventListener("click", () => { aller(i); relancer(); });
+    dotsBox.appendChild(d); return d;
+  });
+
+  function afficher() {
+    slides.forEach((f, i) => {
+      const rel = (i - actuel + n) % n;
+      f.classList.toggle("actif", rel === 0);
+      f.classList.toggle("apres", rel === 1 && n > 2);
+      f.classList.toggle("avant", rel === n - 1 && n > 1);
+      f.setAttribute("aria-hidden", rel !== 0);
+    });
+    dots.forEach((d, i) => {
+      d.classList.toggle("actif", i === actuel);
+      d.setAttribute("aria-current", i === actuel);
+    });
+    // relance l'animation de la barre de progression
+    const d = dots[actuel]; d.classList.remove("actif"); void d.offsetWidth; d.classList.add("actif");
+    if (zoomOuvert) majZoom();
+  }
+  function aller(i) { actuel = (i + n) % n; afficher(); }
+  const suivant = () => aller(actuel + 1);
+  const precedent = () => aller(actuel - 1);
+
+  // Lecture automatique
+  function enPause() { return survol || !visible || zoomOuvert || document.hidden; }
+  function majEtat() { car.classList.toggle("en-pause", enPause()); }
+  function relancer() {
+    clearTimeout(timer);
+    majEtat();
+    if (reduit) return;
+    car.classList.add("lecture");
+    const tic = () => { if (!enPause()) suivant(); timer = setTimeout(tic, DUREE); };
+    timer = setTimeout(tic, DUREE);
+  }
+  // En pause, on attend la reprise sans avancer ; à la reprise, la photo garde son temps complet
+  const reprise = () => { majEtat(); if (!enPause()) { afficher(); relancer(); } };
+
+  car.querySelector(".next").addEventListener("click", () => { suivant(); relancer(); });
+  car.querySelector(".prev").addEventListener("click", () => { precedent(); relancer(); });
+  car.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") { suivant(); relancer(); }
+    if (e.key === "ArrowLeft") { precedent(); relancer(); }
+  });
+  car.addEventListener("mouseenter", () => { survol = true; majEtat(); });
+  car.addEventListener("mouseleave", () => { survol = false; reprise(); });
+  document.addEventListener("visibilitychange", reprise);
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; reprise(); }, { threshold: 0.35 }).observe(car);
+
+  // Glisser du doigt (ou de la souris)
+  let x0 = null, glisse = false;
+  stage.addEventListener("pointerdown", (e) => { x0 = e.clientX; glisse = false; });
+  stage.addEventListener("pointermove", (e) => { if (x0 !== null && Math.abs(e.clientX - x0) > 10) glisse = true; });
+  stage.addEventListener("pointerup", (e) => {
+    if (x0 === null) return;
+    const dx = e.clientX - x0; x0 = null;
+    if (Math.abs(dx) > 40) { dx < 0 ? suivant() : precedent(); relancer(); }
+  });
+  stage.addEventListener("pointercancel", () => { x0 = null; });
+
+  // Clic : sur une photo voisine on y va, sur la photo du milieu on l'agrandit
+  slides.forEach((f, i) => f.addEventListener("click", () => {
+    if (glisse) return;
+    if (i === actuel) ouvrirZoom(); else { aller(i); relancer(); }
+  }));
+
+  // Plein écran
+  const zoom = document.createElement("div");
+  zoom.className = "car-zoom";
+  zoom.setAttribute("role", "dialog"); zoom.setAttribute("aria-modal", "true"); zoom.setAttribute("aria-label", "Photo agrandie");
+  const L = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
+  const R = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>';
+  zoom.innerHTML = '<img alt=""><button class="z-prev" type="button" aria-label="Photo précédente">' + L + '</button>' +
+    '<button class="z-next" type="button" aria-label="Photo suivante">' + R + '</button>' +
+    '<button class="fermer" type="button" aria-label="Fermer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>';
+  document.body.appendChild(zoom);
+  const zImg = zoom.querySelector("img");
+  function majZoom() { const im = slides[actuel].querySelector("img"); zImg.src = im.src; zImg.alt = im.alt; }
+  function ouvrirZoom() { zoomOuvert = true; majZoom(); zoom.classList.add("ouvert"); zoom.querySelector(".fermer").focus(); majEtat(); }
+  function fermerZoom() { zoomOuvert = false; zoom.classList.remove("ouvert"); car.focus({ preventScroll: true }); reprise(); }
+  zoom.querySelector(".fermer").addEventListener("click", fermerZoom);
+  zoom.querySelector(".z-next").addEventListener("click", suivant);
+  zoom.querySelector(".z-prev").addEventListener("click", precedent);
+  zoom.addEventListener("click", (e) => { if (e.target === zoom) fermerZoom(); });
+  document.addEventListener("keydown", (e) => {
+    if (!zoomOuvert) return;
+    if (e.key === "Escape") fermerZoom();
+    if (e.key === "ArrowRight") suivant();
+    if (e.key === "ArrowLeft") precedent();
+  });
+  let zx = null;
+  zoom.addEventListener("pointerdown", (e) => zx = e.clientX);
+  zoom.addEventListener("pointerup", (e) => {
+    if (zx === null) return; const dx = e.clientX - zx; zx = null;
+    if (Math.abs(dx) > 40) dx < 0 ? suivant() : precedent();
+  });
+
+  afficher();
+  relancer();
 }

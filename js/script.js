@@ -23,6 +23,14 @@ document.addEventListener("DOMContentLoaded", () => {
   initRsvp();
 
   initCarrousel();
+
+  // Bouton « Copier l'IBAN »
+  document.querySelectorAll(".btn-copier").forEach((b) => b.addEventListener("click", async () => {
+    const texte = b.dataset.copier, initial = b.textContent;
+    try { await navigator.clipboard.writeText(texte); b.textContent = "IBAN copié ✓"; }
+    catch (e) { b.textContent = "Sélectionnez l'IBAN pour le copier"; }
+    setTimeout(() => (b.textContent = initial), 2500);
+  }));
 });
 
 // ---------- RSVP ----------
